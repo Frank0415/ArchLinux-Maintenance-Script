@@ -1,5 +1,7 @@
 # Presentation
-An all-in-one script that simplifies system maintenance on Arch Linux and Arch-based Linux distributions.
+An all-in-one script (flaovred to my needs) that simplifies system maintenance on Arch Linux and Arch-based Linux distributions.
+
+Fastfetch is using the config in ![Frank0415/dotfiles](https://github.com/Frank0415/dotfiles) to display system information only once to show system-related things like graphics card.
 
 This script can :
 1. check for failed systemd services,
@@ -9,8 +11,11 @@ This script can :
 5. check for orphaned packages,
 6. clean packages cache,
 7. check disks health,
+8. download canvas files using ![Frank0415/sjtu_canvas_downloader](https://github.com/Frank0415/sjtu_canvas_downloader)
+9. toggle monitor modes
+10. toggle wacom tablet modes
 
-on demand by the user from the script's menu.
+on demand by configuration the user from the script's menu, do note that some features are disabled.
 
 ![Screenshot_2022-01-09_01-37-57](https://user-images.githubusercontent.com/84401519/148664681-52ff22e4-316f-4943-8853-d4191cd7eead.png)
 
