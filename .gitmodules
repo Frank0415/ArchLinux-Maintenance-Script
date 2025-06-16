@@ -1,0 +1,3 @@
+[submodule "sjtu_canvas_downloader"]
+	path = sjtu_canvas_downloader
+	url = https://github.com/Frank0415/sjtu_canvas_downloader

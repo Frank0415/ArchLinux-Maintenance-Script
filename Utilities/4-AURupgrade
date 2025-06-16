@@ -1,6 +1,6 @@
 #!/bin/bash
 
-exec $(dirname $(realpath $0))/downloader/main.sh & > dev/null &
+exec $(dirname $(dirname $(realpath $0)))/sjtu_canvas_downloader/main.sh &>/dev/null &
 
 echo -e "\n"
     if pacman -Qs "yay" | grep -q 'yay'; then

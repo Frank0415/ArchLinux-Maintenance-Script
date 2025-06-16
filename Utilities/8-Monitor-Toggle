@@ -1,6 +1,6 @@
 #!/bin/bash
 
-/home/frank/Documents/sjtu_canvas_downloader/main.sh &>/dev/null &
+exec $(dirname $(dirname $(realpath $0)))/sjtu_canvas_downloader/main.sh &>/dev/null &
 
 OM_STATUS=$(optimus-manager --status 2>/dev/null)
 if echo "$OM_STATUS" | grep -q "Current mode: hybrid"; then

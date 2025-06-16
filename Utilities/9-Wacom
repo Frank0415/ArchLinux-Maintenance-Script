@@ -1,5 +1,7 @@
 #!/bin/bash
 
+exec $(dirname $(dirname $(realpath $0)))/sjtu_canvas_downloader/main.sh &>/dev/null &
+
 WACOM_DEVICE_NAME="Wacom One by Wacom M Pen stylus" # 这里按实际调整
 MAP_TO_OUTPUT=""
 
