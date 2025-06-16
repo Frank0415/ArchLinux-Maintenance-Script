@@ -1,0 +1,29 @@
+#!/bin/bash
+
+WACOM_DEVICE_NAME="Wacom One by Wacom M Pen stylus" # 这里按实际调整
+MAP_TO_OUTPUT=""
+
+mcount=$(xrandr --listmonitors | grep -oP '^Monitors: \K\d+')
+
+
+# 非integrated GPU，使用HEAD-0/HEAD-1
+if [[ mcount -eq 1 ]]; then
+    MAP_TO_OUTPUT="HEAD-0"
+    echo "Mapping Wacom to Laptop Display (HEAD-0)"
+elif [[ mcount -eq 2 ]]; then
+    MAP_TO_OUTPUT="HEAD-1"
+    echo "Mapping Wacom to External Display (HEAD-1)"
+fi
+
+if [[ -n "$MAP_TO_OUTPUT" ]]; then
+    xsetwacom set "$WACOM_DEVICE_NAME" MapToOutput "$MAP_TO_OUTPUT"
+    xsetwacom set "$WACOM_DEVICE_NAME" Button 2 "key +ctrl z -ctrl"
+    xsetwacom set "$WACOM_DEVICE_NAME" Button 3 "key +Shift +ctrl p -ctrl -Shift"
+    xsetwacom set "$WACOM_DEVICE_NAME" PressureCurve 0 0 0 100
+    xsetwacom set "$WACOM_DEVICE_NAME" PressureCurve 0 100 100 100
+    echo "Wacom tablet '$WACOM_DEVICE_NAME' mapped to $MAP_TO_OUTPUT."
+elif [[ -n "$WACOM_TARGET" ]]; then
+    echo "Wacom mapping skipped for target '$WACOM_TARGET' due to issues mentioned above."
+fi
+
+exec $(dirname $(dirname $(realpath $0)))/ArchLinux-Maintenance -n

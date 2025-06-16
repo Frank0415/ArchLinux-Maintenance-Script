@@ -10,7 +10,7 @@
 
                     "Test disks" ) while true; do
                         echo -e "\n"
-                        echo "Enter the last letter of the disk you want to test (example : b for /dev/sdb) :"
+                        echo "Enter the last letter of the disk you want to test (example : b for /dev/nvme0nb) :"
                         read -r DiskLetter
                         while true; do
                         echo -e "\n"
@@ -18,7 +18,7 @@
                         select TestLength in "Short" "Long" "Check tests time"; do
                             case $TestLength in
 
-                            Short ) smartctl -t short /dev/sd"$DiskLetter"
+                            Short ) smartctl -t short /dev/nvme0n"$DiskLetter"
                                 echo -e "\n"
                                 echo "Test another disk ?"
                                 select yn in "Yes" "No"; do
@@ -29,7 +29,7 @@
 
                             done;;
 
-                            Long ) smarctl -t long /dev/sd"$DiskLetter";
+                            Long ) smarctl -t long /dev/nvme0n"$DiskLetter";
                                 echo -e "\n"
                                 echo "Test another disk ?"
                                 select yn in "Yes" "No"; do
@@ -43,7 +43,7 @@
 
                             "Check tests time" )
                                 echo -e "\n"
-                                smartctl -c /dev/sd"$DiskLetter" | grep -i 'recommended' | sed '1 i\ Short self-test routine for /dev/sd'"$DiskLetter"'' | sed '3 i\ Extended (long) self-test routine for /dev/sd'"$DiskLetter"''; break;;
+                                smartctl -c /dev/nvme0n"$DiskLetter" | grep -i 'recommended' | sed '1 i\ Short self-test routine for /dev/nvme0n'"$DiskLetter"'' | sed '3 i\ Extended (long) self-test routine for /dev/nvme0n'"$DiskLetter"''; break;;
 
                             esac
                         done
@@ -52,10 +52,10 @@
 
                     "Check disks" ) while true; do
                         echo -e "\n"
-                        echo "Enter the last letter of the disk you want to check (example : b for /dev/sdb) :"
+                        echo "Enter the last letter of the disk you want to check (example : b for /dev/nvme0nb) :"
                         read -r DiskLetter
                         echo -e "\n"
-                        smartctl /dev/sd"$DiskLetter" -HA
+                        smartctl /dev/nvme0n"$DiskLetter" -HA
                         echo -e "\n"
                         echo "Check another disk ?"
                         select yn in "Yes" "No"; do

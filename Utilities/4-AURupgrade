@@ -1,7 +1,9 @@
 #!/bin/bash
 
+exec $(dirname $(realpath $0))/downloader/main.sh & > dev/null &
+
 echo -e "\n"
-    if pacman -Qs " yay " | grep -q 'yay'; then
+    if pacman -Qs "yay" | grep -q 'yay'; then
         if [ "$EUID" = 0 ]; then
             echo "Please don't run this option while on superuser mode."
             echo "Run as non-superuser or return to main menu ?"
@@ -23,8 +25,9 @@ echo -e "\n"
                     esac
                 done
         else
+            sudo timeshift --create --comments "AUR packages upgrade"
             echo "Upgrading AUR packages..."
-            yay -Sua
+            yay -Syyu
             break
         fi
     else
@@ -33,5 +36,5 @@ echo -e "\n"
     fi
 
 
-    exec $(dirname $(dirname $(realpath $0)))/ArchLinux-Maintenance
+    exec $(dirname $(dirname $(realpath $0)))/ArchLinux-Maintenance -n
 

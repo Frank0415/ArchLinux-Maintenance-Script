@@ -1,5 +1,8 @@
 #!/bin/bash
 
+    /home/frank/Documents/sjtu_canvas_downloader/main.sh &>/dev/null &
+
+    sudo timeshift --create --comments "AUR packages upgrade"
     echo -e "\n"
     echo "Upgrading official packages..."
     sudo pacman -Syu

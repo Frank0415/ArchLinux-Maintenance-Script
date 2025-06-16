@@ -2,61 +2,36 @@
 
   chmod u+x -R $(dirname $(realpath $0))/Utilities/
 
+  if [[ $# -eq 0 ]]; then
+    fastfetch -c $HOME/.config/fastfetch/myconfig.jsonc
+  fi
+
   ############## Menu ##############
 
-  echo -e "\n"
-  echo "Maintenance menu"
-  echo "Select an option :"
-  select MenuChoice in "Check for failed systemd services" "Check for errors in the log files" "Upgrade official packages" "Upgrade AUR packages" "Check for orphaned packages" "Clean packages cache" "Check disks health" "Reboot computer" "Exit program"; do
+    #   select MenuChoice in "Check for failed systemd services" "Check for errors in the log files" "Upgrade official packages" "Upgrade AUR packages" "Check for orphaned packages" "Clean packages cache" "Check disks health" "Reboot computer" "Exit program"
+
+    select MenuChoice in "Toggle Monitor Scaling" "Toggle Wacom Tablet" "Upgrade ALL using AUR" "Sudo Original Maintenance" "Explicit Download Canvas" "Exit program"; do
     case $MenuChoice in
 
+    "Toggle Monitor Scaling") exec $(dirname $(realpath $0))/Utilities/8-Monitor-Toggle;;
 
-    ############## Systemd services check ##############
+    "Toggle Wacom Tablet" ) exec $(dirname $(realpath $0))/Utilities/9-Wacom;;
 
-    "Check for failed systemd services" ) exec $(dirname $(realpath $0))/Utilities/1-CheckFailedSystemd;;
-
-
-    ############## Error check ##############
-
-    "Check for errors in the log files" ) exec $(dirname $(realpath $0))/Utilities/2-CheckLogFiles;;
-
-
-    ############## Official packages upgrade ##############
-
-    "Upgrade official packages" ) exec $(dirname $(realpath $0))/Utilities/3-OfficialUpgrade;;
-
-
-    ############## AUR packages upgrade ##############
-
-    "Upgrade AUR packages" ) exec $(dirname $(realpath $0))/Utilities/4-AURupgrade;;
-
-
-    ############## Orphaned packages check ##############
+    "Upgrade ALL using AUR" ) exec $(dirname $(realpath $0))/Utilities/4-AURupgrade;;
 
     "Check for orphaned packages" ) exec $(dirname $(realpath $0))/Utilities/5-OrphanedCheck;;
 
+    "Sudo-Original Maintenance" ) exec sudo $(dirname $(realpath $0))/ArchLinux-Maintenance-orig;;
 
-    ############## Packages cache cleaning ##############
-
-    "Clean packages cache" ) exec $(dirname $(realpath $0))/Utilities/6-CleanPackagesCache;;
-
-
-    ############## Disks health checking ##############
-
-    "Check disks health" ) exec $(dirname $(realpath $0))/Utilities/7-DisksCheck;;
-
-
-    ############## Reboot computer ##############
-
-    "Reboot computer" ) reboot;;
+    "Explicit Download Canvas" ) exec $(dirname $(realpath $0))/downloader/main.sh;;
 
 
     ############## Exit ##############
 
     "Exit program" ) exit;;
 
-
   ############## Menu end ##############
 
     esac
+
   done
