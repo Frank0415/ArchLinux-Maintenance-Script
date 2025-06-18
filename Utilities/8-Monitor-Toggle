@@ -17,8 +17,8 @@ else
     EXTERNAL_DISPLAY="HDMI-0"
 fi
 
-# Print only the number of monitors
-mcount=$(xrandr --listmonitors | grep -oP '^Monitors: \K\d+')
+# Count all connected monitors (active and inactive)
+mcount=$(xrandr | grep " connected" | wc -l)
 
 if [[ mcount -eq 2 ]]; then
     echo "$GPU_MODE"

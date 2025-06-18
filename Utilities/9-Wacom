@@ -5,16 +5,31 @@ exec $(dirname $(dirname $(realpath $0)))/sjtu_canvas_downloader/main.sh &>/dev/
 WACOM_DEVICE_NAME="Wacom One by Wacom M Pen stylus" # 这里按实际调整
 MAP_TO_OUTPUT=""
 
-mcount=$(xrandr --listmonitors | grep -oP '^Monitors: \K\d+')
-
+mcount=$(xrandr | grep " connected" | wc -l)
 
 # 非integrated GPU，使用HEAD-0/HEAD-1
 if [[ mcount -eq 1 ]]; then
     MAP_TO_OUTPUT="HEAD-0"
     echo "Mapping Wacom to Laptop Display (HEAD-0)"
-elif [[ mcount -eq 2 ]]; then
-    MAP_TO_OUTPUT="HEAD-1"
-    echo "Mapping Wacom to External Display (HEAD-1)"
+else
+    echo "Multiple monitors detected. Please choose the display to map the Wacom tablet to:"
+    echo "0) Laptop Display (HEAD-0)"
+    echo "1) External Display (HEAD-1)"
+    read -p "Enter your choice (0 or 1): " choice
+    case $choice in
+        0)
+            MAP_TO_OUTPUT="HEAD-0"
+            echo "Mapping Wacom to Laptop Display (HEAD-0)"
+            ;;
+        1)
+            MAP_TO_OUTPUT="HEAD-1"
+            echo "Mapping Wacom to External Display (HEAD-1)"
+            ;;
+        *)
+            echo "Invalid choice. No mapping will be applied."
+            MAP_TO_OUTPUT=""
+            ;;
+    esac
 fi
 
 if [[ -n "$MAP_TO_OUTPUT" ]]; then

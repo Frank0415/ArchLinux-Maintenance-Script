@@ -24,3 +24,4 @@ on demand by configuration the user from the script's menu, do note that some fe
 - Yet another yogurt (yay) for utility 4. The yay package can be found in the AUR at the following link : https://aur.archlinux.org/packages/yay/.
 - Smartmontools for utility 7. The [smartmontools package](https://archlinux.org/packages/extra/x86_64/smartmontools/) can be manually installed by running **pacman -S smartmontools** or automatically by selecting option 7 without the package installed.
 - 8,9,10 are tailored to my needs, modify or remove them if you don't need them.
+
