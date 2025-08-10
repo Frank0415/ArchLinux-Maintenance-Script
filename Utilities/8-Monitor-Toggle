@@ -1,40 +1,47 @@
 #!/bin/bash
 
-exec $(dirname $(dirname $(realpath $0)))/sjtu_canvas_downloader/main.sh &>/dev/null &
+exec $(dirname $(dirname $(realpath $0)))/sjtu_canvas_downloader/main.sh >/dev/null 2>&1 &
 
-OM_STATUS=$(optimus-manager --status 2>/dev/null)
-if echo "$OM_STATUS" | grep -q "Current mode: hybrid"; then
-    GPU_MODE="hybrid"
-    LAPTOP_DISPLAY="eDP-1"
-    EXTERNAL_DISPLAY="HDMI-1-0"
-elif echo "$OM_STATUS" | grep -q "Current mode: integrated"; then
-    GPU_MODE="integrated"
-    LAPTOP_DISPLAY="eDP-1"
-    EXTERNAL_DISPLAY="DP-3"
-else
-    GPU_MODE="nvidia"
-    LAPTOP_DISPLAY="DP-2"
-    EXTERNAL_DISPLAY="HDMI-0"
+eDP_1_true=0
+HDMI_1_true=$(xrandr | grep "HDMI-1 connected" | wc -l )
+DP_1_true=$(xrandr | grep "DP-1 connected" | wc -l)
+
+MONITOR_COUNT=$(xrandr | grep " connected" | wc -l)
+
+if [[ $MONITOR_COUNT -eq 1 ]]; then
+    eDP_1_true=1
+    echo "Only one monitor detected, setting eDP-1 as the only active monitor."
+elif [[ $MONITOR_COUNT -eq 2 ]]; then
+    if [[ $HDMI_1_true -eq 1 ]]; then
+        HDMI_1_true=1
+        echo "Two monitors detected, HDMI-1 will be used."
+    elif [[ $DP_1_true -gt 1 ]]; then
+        DP_1_true=1
+        echo "Two monitors detected, DP-1 will be used."
+    fi
 fi
 
-# Count all connected monitors (active and inactive)
-mcount=$(xrandr | grep " connected" | wc -l)
-
-if [[ mcount -eq 2 ]]; then
-    echo "$GPU_MODE"
-    xrandr --output "$LAPTOP_DISPLAY" --auto --scale 1.25
-    xrandr --output "$EXTERNAL_DISPLAY" --auto --pos 3200x-151
-    pkill polybar; pkill polybar; pkill polybar
-    sleep 1
-    sh "$HOME/.config/polybar/launch.sh" &>/dev/null &
-    nitrogen --restore &>/dev/null &
-elif [[ mcount -eq 1 ]]; then
-    echo "$GPU_MODE"
-    # echo "$mcount"
-    xrandr --output "$LAPTOP_DISPLAY" --auto --scale 1.25
-    xrandr --output "$EXTERNAL_DISPLAY" --off
-    nitrogen --restore &>/dev/null &
+if [[ $MONITOR_COUNT -eq 1 ]]; then
+    xrandr --output eDP-1 --auto --scale 1
+    xrandr --output HDMI-1 --off
+    xrandr --output DP-1 --off
+    echo "Monitor scaling set to 1 for eDP-1."
+elif [[ $MONITOR_COUNT -eq 2 && $HDMI_1_true -eq 1 ]]; then
+    xrandr --output eDP-1 --auto --scale 1
+    xrandr --output HDMI-1 --auto --pos 3072x0
+    xrandr --output DP-1 --off
+    echo "Monitor scaling set to 1 for eDP-1 and HDMI-1 positioned at 3072x0."
+elif [[ $MONITOR_COUNT -eq 2 && $DP_1_true -eq 1 ]]; then
+    xrandr --output eDP-1 --auto --scale 1
+    xrandr --output DP-1 --auto --pos 3072x0
+    xrandr --output HDMI-1 --off
+    echo "Monitor scaling set to 1 for eDP-1 and DP-1 positioned at 3072x0."
 fi
+
+pkill polybar; pkill polybar; pkill polybar
+nitrogen --restore &>/dev/null &
+sleep 1
+setsid $HOME/.config/polybar/launch.sh > /dev/null 2>&1 &
 
 exec $(dirname $(dirname $(realpath $0)))/ArchLinux-Maintenance -n
 

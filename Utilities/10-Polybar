@@ -1,0 +1,5 @@
+#!/bin/bash
+
+pkill polybar;
+sleep 0.5
+setsid $HOME/.config/polybar/launch.sh > /dev/null 2>&1 &

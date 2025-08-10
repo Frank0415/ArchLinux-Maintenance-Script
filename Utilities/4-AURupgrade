@@ -24,7 +24,7 @@ if pacman -Qs "yay" | grep -q 'yay'; then
                 esac
             done
     else
-        sudo timeshift --create --comments "AUR packages upgrade"
+        sudo timeshift --create --comments "AUR packages upgrade" > /dev/null 2>&1
         echo "Upgrading AUR packages..."
         yay -Syyu
     fi

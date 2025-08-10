@@ -1,0 +1,40 @@
+#!/bin/bash
+
+exec $(dirname $(dirname $(realpath $0)))/sjtu_canvas_downloader/main.sh &>/dev/null &
+
+OM_STATUS=$(optimus-manager --status 2>/dev/null)
+if echo "$OM_STATUS" | grep -q "Current mode: hybrid"; then
+    GPU_MODE="hybrid"
+    LAPTOP_DISPLAY="eDP-1"
+    EXTERNAL_DISPLAY="HDMI-1-0"
+elif echo "$OM_STATUS" | grep -q "Current mode: integrated"; then
+    GPU_MODE="integrated"
+    LAPTOP_DISPLAY="eDP-1"
+    EXTERNAL_DISPLAY="DP-3"
+else
+    GPU_MODE="nvidia"
+    LAPTOP_DISPLAY="DP-2"
+    EXTERNAL_DISPLAY="HDMI-0"
+fi
+
+# Count all connected monitors (active and inactive)
+mcount=$(xrandr | grep " connected" | wc -l)
+
+if [[ mcount -eq 2 ]]; then
+    echo "$GPU_MODE"
+    xrandr --output "$LAPTOP_DISPLAY" --auto --scale 1.25
+    xrandr --output "$EXTERNAL_DISPLAY" --auto --pos 3200x-151
+    pkill polybar; pkill polybar; pkill polybar
+    sleep 1
+    sh "$HOME/.config/polybar/launch.sh" &>/dev/null &
+    nitrogen --restore &>/dev/null &
+elif [[ mcount -eq 1 ]]; then
+    echo "$GPU_MODE"
+    # echo "$mcount"
+    xrandr --output "$LAPTOP_DISPLAY" --auto --scale 1.25
+    xrandr --output "$EXTERNAL_DISPLAY" --off
+    nitrogen --restore &>/dev/null &
+fi
+
+exec $(dirname $(dirname $(realpath $0)))/ArchLinux-Maintenance -n
+

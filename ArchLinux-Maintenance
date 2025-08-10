@@ -21,7 +21,7 @@
 
     "Toggle Wacom Tablet" ) exec $(dirname $(realpath $0))/Utilities/9-Wacom;;
 
-    "Reboot Polybar" ) nohup $HOME/.config/polybar/launch.sh& disown;;
+    "Reboot Polybar" ) exec $(dirname $(realpath $0))/Utilities/10-Polybar;;
 
     "Upgrade ALL using AUR" ) exec $(dirname $(realpath $0))/Utilities/4-AURupgrade;;
 
